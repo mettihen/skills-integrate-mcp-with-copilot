@@ -303,8 +303,9 @@ def signup_for_activity(activity_name: str, email: str | None = None, user: dict
     # Get the specific activity
     activity = activities[activity_name]
 
-    target_email = user["email"] if user["role"] == "student" else (email or user["email"])
-
+    if user["role"] == "student" and email is not None and email.lower() != user["email"]:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot sign up other users")
+    target_email = (user["email"] if user["role"] == "student" else (email or user["email"])).lower()
     # Validate student is not already signed up
     if target_email in activity["participants"]:
         raise HTTPException(
