@@ -27,7 +27,7 @@ current_dir = Path(__file__).parent
 app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
           "static")), name="static")
 
-db_path = current_dir / "school.db"
+db_path = Path(os.getenv("DATABASE_PATH", str(current_dir / "school.db")))
 
 
 class RegisterRequest(BaseModel):
