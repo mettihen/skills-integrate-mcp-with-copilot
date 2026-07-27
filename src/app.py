@@ -92,8 +92,13 @@ def _create_user(email: str, password: str, role: str = "student") -> int:
 
 
 def _seed_default_admin() -> None:
-    admin_email = os.getenv("ADMIN_EMAIL", "admin@mergington.edu").lower()
-    admin_password = os.getenv("ADMIN_PASSWORD", "ChangeMe123!")
+    admin_email = os.getenv("ADMIN_EMAIL")
+    admin_password = os.getenv("ADMIN_PASSWORD")
+
+    if not admin_email or not admin_password:
+        return
+
+    admin_email = admin_email.lower()
 
     with _db_connect() as conn:
         existing = conn.execute("SELECT id FROM users WHERE email = ?", (admin_email,)).fetchone()
